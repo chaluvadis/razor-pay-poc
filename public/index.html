@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Razorpay POC Checkout</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+      :root {
+        --bg: #f4f1ea;
+        --panel: #fffaf0;
+        --text: #1f2933;
+        --accent: #006d77;
+        --accent-2: #d62828;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+        color: var(--text);
+        background: radial-gradient(circle at top right, #ffe8c2, var(--bg) 45%),
+          linear-gradient(120deg, #f7f3ee 0%, #efe8dc 100%);
+        display: grid;
+        place-items: center;
+      }
+
+      .card {
+        width: min(92vw, 520px);
+        background: var(--panel);
+        border: 2px solid #f1d7ac;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 20px 45px rgba(31, 41, 51, 0.15);
+        animation: slideUp 450ms ease;
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: 1.8rem;
+      }
+
+      p {
+        margin: 0 0 20px;
+      }
+
+      .row {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      label {
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      input {
+        border: 1px solid #e5d5b8;
+        border-radius: 10px;
+        padding: 12px;
+        font-size: 1rem;
+      }
+
+      button {
+        width: 100%;
+        border: 0;
+        border-radius: 12px;
+        padding: 12px;
+        font-size: 1rem;
+        color: white;
+        background: linear-gradient(120deg, var(--accent), #1a936f);
+        cursor: pointer;
+      }
+
+      button:hover {
+        filter: brightness(1.04);
+      }
+
+      .status {
+        margin-top: 14px;
+        padding: 10px;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        background: #f2f2f2;
+      }
+
+      .error {
+        background: #ffe3e3;
+        color: #7f1d1d;
+      }
+
+      .success {
+        background: #dcfce7;
+        color: #14532d;
+      }
+
+      @keyframes slideUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Razorpay Payment POC</h1>
+      <p>Enter amount in INR. The backend converts to paise before creating order.</p>
+
+      <div class="row">
+        <label for="amount">Amount (INR)</label>
+        <input id="amount" type="number" min="1" value="100" />
+      </div>
+
+      <button id="payBtn" type="button">Pay with Razorpay</button>
+      <div id="status" class="status">Idle</div>
+    </main>
+
+    <script>
+      const statusEl = document.getElementById("status");
+      const payBtn = document.getElementById("payBtn");
+
+      const setStatus = (message, type) => {
+        statusEl.className = "status";
+        if (type) statusEl.classList.add(type);
+        statusEl.textContent = message;
+      };
+
+      const createOrder = async (amountInInr) => {
+        const payload = {
+          amount: Math.round(Number(amountInInr) * 100),
+          currency: "INR",
+        };
+
+        const response = await fetch("/api/payments/create-order", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || "Failed to create order");
+        }
+
+        return response.json();
+      };
+
+      const verifyPayment = async (paymentData) => {
+        const response = await fetch("/api/payments/verify-payment", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(paymentData),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Payment verification failed");
+        }
+        return data;
+      };
+
+      const fetchPublicConfig = async () => {
+        const response = await fetch("/api/config");
+        if (!response.ok) {
+          throw new Error("Could not fetch public config");
+        }
+        return response.json();
+      };
+
+      payBtn.addEventListener("click", async () => {
+        try {
+          const amount = Number(document.getElementById("amount").value);
+          if (!Number.isFinite(amount) || amount <= 0) {
+            throw new Error("Please enter a valid amount");
+          }
+
+          setStatus("Creating order...", "");
+          const [{ order }, config] = await Promise.all([createOrder(amount), fetchPublicConfig()]);
+
+          const options = {
+            key: config.razorpayKeyId,
+            amount: order.amount,
+            currency: order.currency,
+            name: "Razorpay POC",
+            description: "Test Transaction",
+            order_id: order.razorpay_order_id,
+            handler: async (response) => {
+              setStatus("Verifying payment...", "");
+              await verifyPayment(response);
+              setStatus("Payment successful and verified", "success");
+            },
+            prefill: {
+              name: "POC User",
+              email: "user@example.com",
+              contact: "9999999999",
+            },
+            theme: {
+              color: "#006d77",
+            },
+          };
+
+          const rzp = new Razorpay(options);
+          rzp.on("payment.failed", (failureResponse) => {
+            const errorDescription =
+              failureResponse?.error?.description || "Payment failed. Check dashboard logs.";
+            setStatus(errorDescription, "error");
+          });
+          rzp.open();
+        } catch (error) {
+          setStatus(error.message, "error");
+        }
+      });
+    </script>
+  </body>
+</html>
