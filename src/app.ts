@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
+import type { Request, Response } from "express";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import { requestLogger } from "./middleware/logger.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
@@ -16,14 +17,14 @@ app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/health", (_req, res) => {
-  res.json({ status: "ok", env: config.nodeEnv });
+app.get("/health", (_req: Request, res: Response) => {
+	res.json({ status: "ok", env: config.nodeEnv });
 });
 
-app.get("/api/config", (_req, res) => {
-  res.json({
-    razorpayKeyId: config.razorpay.keyId,
-  });
+app.get("/api/config", (_req: Request, res: Response) => {
+	res.json({
+		razorpayKeyId: config.razorpay.keyId,
+	});
 });
 
 app.use("/api/payments", paymentRoutes);

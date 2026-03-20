@@ -1,0 +1,27 @@
+import { HttpError } from "./httpError.js";
+
+export const parseAmount = (value: unknown): number => {
+	const amount = Number(value);
+	if (!Number.isInteger(amount) || amount <= 0) {
+		throw new HttpError(
+			400,
+			"amount must be a positive integer in smallest currency unit (paise)",
+		);
+	}
+	return amount;
+};
+
+export const parseCurrency = (value: unknown): string => {
+	const currency = String(value || "INR").toUpperCase();
+	if (!/^[A-Z]{3}$/.test(currency)) {
+		throw new HttpError(400, "currency must be a valid 3-letter ISO code");
+	}
+	return currency;
+};
+
+export const requireString = (value: unknown, fieldName: string): string => {
+	if (typeof value !== "string" || value.trim().length === 0) {
+		throw new HttpError(400, `${fieldName} is required`);
+	}
+	return value.trim();
+};

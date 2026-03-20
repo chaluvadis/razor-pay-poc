@@ -1,12 +1,15 @@
-FROM node:24-slim
+FROM node:24-slim AS base
+
+RUN corepack enable
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm install --omit=dev
+COPY package.json pnpm-lock.yaml* ./
+RUN pnpm install --frozen-lockfile=false
 
 COPY . .
+RUN pnpm build
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["pnpm", "start"]

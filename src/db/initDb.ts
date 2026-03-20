@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS orders (
 );
 `;
 
-export const initDb = async () => {
-  await query(createOrdersTableSQL);
+export const initDb = async (): Promise<void> => {
+	await query(createOrdersTableSQL);
 };

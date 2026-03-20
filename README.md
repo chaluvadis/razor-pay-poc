@@ -1,8 +1,9 @@
-# Razorpay POC (Node.js v24 + Express + PostgreSQL + Docker)
+# Razorpay POC (Node.js v24 + Express + TypeScript + PostgreSQL + Docker)
 
 A full Proof of Concept project for Razorpay payment gateway integration using:
 
 - Node.js v24 (ES modules)
+- TypeScript (strict mode)
 - Express.js API
 - PostgreSQL
 - Docker and Docker Compose
@@ -33,25 +34,28 @@ A full Proof of Concept project for Razorpay payment gateway integration using:
 │   └── init.sql
 ├── src/
 │   ├── controllers/
-│   │   └── paymentController.js
+│   │   └── paymentController.ts
 │   ├── db/
-│   │   ├── initDb.js
-│   │   └── pool.js
+│   │   ├── initDb.ts
+│   │   └── pool.ts
 │   ├── middleware/
-│   │   ├── errorHandler.js
-│   │   └── logger.js
+│   │   ├── errorHandler.ts
+│   │   └── logger.ts
 │   ├── routes/
-│   │   └── paymentRoutes.js
+│   │   └── paymentRoutes.ts
 │   ├── services/
-│   │   ├── orderService.js
-│   │   └── razorpayService.js
+│   │   ├── orderService.ts
+│   │   └── razorpayService.ts
+│   ├── types/
+│   │   └── order.ts
 │   ├── utils/
-│   │   ├── asyncHandler.js
-│   │   ├── httpError.js
-│   │   └── validation.js
-│   ├── app.js
-│   ├── config.js
-│   └── server.js
+│   │   ├── asyncHandler.ts
+│   │   ├── httpError.ts
+│   │   └── validation.ts
+│   ├── app.ts
+│   ├── config.ts
+│   └── server.ts
+├── tsconfig.json
 ├── .dockerignore
 ├── .env.example
 ├── docker-compose.yml
@@ -148,7 +152,7 @@ Use these values when creating a server connection in pgAdmin:
 The orders table is auto-created in two ways:
 
 1. Docker PostgreSQL init script via sql/init.sql.
-2. App startup safety init via src/db/initDb.js.
+2. App startup safety init via src/db/initDb.ts.
 
 Schema:
 
@@ -287,8 +291,15 @@ Always confirm latest test credentials in Razorpay official docs/dashboard.
 3. Install dependencies and start app:
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
+```
+
+For production build locally:
+
+```bash
+pnpm build
+pnpm start
 ```
 
 ## 12. Logging, Validation, and Error Handling

@@ -1,29 +1,39 @@
 {
-  "name": "razorpay-poc",
-  "version": "1.0.0",
-  "description": "A proof of concept for Razorpay payment integration with Node.js v24, Express.js, PostgreSQL, Docker, and pgAdmin.",
-  "type": "module",
-  "main": "src/server.js",
-  "engines": {
-    "node": ">=24.0.0"
-  },
-  "scripts": {
-    "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
-  },
-  "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.21.2",
-    "pg": "^8.13.1",
-    "razorpay": "^2.9.6"
-  },
-  "keywords": [
-    "razorpay",
-    "nodejs",
-    "express",
-    "postgresql",
-    "docker"
-  ],
-  "author": "chaluvadis",
-  "license": "MIT"
+	"name": "razorpay-poc",
+	"version": "1.0.0",
+	"description": "A proof of concept for Razorpay payment integration with Node.js v24, Express.js, PostgreSQL, Docker, and pgAdmin.",
+	"type": "module",
+	"main": "dist/server.js",
+	"packageManager": "pnpm@10.8.1",
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"start": "node dist/server.js",
+		"dev": "tsx watch src/server.ts",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"dotenv": "^17.3.1",
+		"express": "^5.2.1",
+		"pg": "^8.20.0",
+		"razorpay": "^2.9.6"
+	},
+	"devDependencies": {
+		"@types/express": "^5.0.3",
+		"@types/node": "^24.6.1",
+		"@types/pg": "^8.15.6",
+		"tsx": "^4.20.5",
+		"typescript": "^5.9.3"
+	},
+	"keywords": [
+		"razorpay",
+		"nodejs",
+		"express",
+		"postgresql",
+		"docker"
+	],
+	"author": "chaluvadis",
+	"license": "MIT"
 }
