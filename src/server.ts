@@ -1,7 +1,7 @@
-import app from "./app.js";
-import { config } from "./config.js";
-import { initDb } from "./db/initDb.js";
-import { pool } from "./db/pool.js";
+import app from "./app.ts";
+import { config } from "./config.ts";
+import { initDb } from "./db/initDb.ts";
+import { pool } from "./db/pool.ts";
 
 const startServer = async (): Promise<void> => {
 	try {

@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { asyncHandler } from "../utils/asyncHandler.ts";
 import {
 	createOrder,
 	getOrderById,
 	listOrders,
 	verifyPayment,
 	webhookHandler,
-} from "../controllers/paymentController.js";
+} from "../controllers/paymentController.ts";
 
 const router = Router();
 

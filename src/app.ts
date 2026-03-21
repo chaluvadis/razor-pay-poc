@@ -1,11 +1,11 @@
 import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { Request, Response } from "express";
-import paymentRoutes from "./routes/paymentRoutes.js";
-import { requestLogger } from "./middleware/logger.js";
-import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
-import { config } from "./config.js";
+import paymentRoutes from "./routes/paymentRoutes.ts";
+import { requestLogger } from "./middleware/logger.ts";
+import { errorHandler, notFoundHandler } from "./middleware/errorHandler.ts";
+import { config } from "./config.ts";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

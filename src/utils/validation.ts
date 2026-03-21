@@ -1,4 +1,4 @@
-import { HttpError } from "./httpError.js";
+import { HttpError } from "./httpError.ts";
 
 export const parseAmount = (value: unknown): number => {
 	const amount = Number(value);

@@ -1,6 +1,6 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import Razorpay from "razorpay";
-import { config } from "../config.js";
+import { config } from "../config.ts";
 
 const razorpay = new Razorpay({
 	key_id: config.razorpay.keyId,

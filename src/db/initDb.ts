@@ -1,4 +1,4 @@
-import { query } from "./pool.js";
+import { query } from "./pool.ts";
 
 const createOrdersTableSQL = `
 CREATE TABLE IF NOT EXISTS orders (

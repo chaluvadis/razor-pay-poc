@@ -8,6 +8,7 @@ A full Proof of Concept project for Razorpay payment gateway integration using:
 - PostgreSQL
 - Docker and Docker Compose
 - pgAdmin for DB management
+- Node 24 native features: `--env-file-if-exists`, `--watch` (for built output), built-in `node:test`, `AsyncLocalStorage`
 
 ## 1. Features
 
@@ -23,6 +24,7 @@ A full Proof of Concept project for Razorpay payment gateway integration using:
 - Request logging middleware
 - Centralized error handling middleware
 - Optional static frontend to test Razorpay Checkout
+- Request correlation IDs using `AsyncLocalStorage`
 
 ## 2. Project Structure
 
@@ -104,6 +106,35 @@ Notes:
 
 - For local Node app (without Docker app service), DATABASE_URL should usually target localhost.
 - In Docker app service, DATABASE_URL is already set to use service name postgres.
+- Local scripts load `.env` using Node.js native `--env-file-if-exists` (no dotenv runtime dependency).
+
+## 4.1 Node 24 Native Runtime Commands
+
+Development mode:
+
+```bash
+pnpm dev
+```
+
+Native Node watch mode on built output:
+
+```bash
+pnpm dev:node-watch
+```
+
+Run built-in Node test runner:
+
+```bash
+pnpm test
+pnpm test:watch
+```
+
+Type check and build:
+
+```bash
+pnpm typecheck
+pnpm build
+```
 
 ## 5. Docker Setup
 
@@ -301,6 +332,8 @@ For production build locally:
 pnpm build
 pnpm start
 ```
+
+`pnpm start` runs built JavaScript with Node's native `.env` loader.
 
 ## 12. Logging, Validation, and Error Handling
 

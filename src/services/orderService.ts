@@ -1,10 +1,10 @@
-import { query } from "../db/pool.js";
+import { query } from "../db/pool.ts";
 import type {
 	CreateOrderInput,
 	MarkOrderFailedInput,
 	MarkOrderPaidInput,
 	OrderRecord,
-} from "../types/order.js";
+} from "../types/order.ts";
 
 export const insertOrder = async ({
 	razorpayOrderId,

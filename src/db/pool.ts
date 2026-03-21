@@ -1,6 +1,6 @@
 import pg from "pg";
 import type { QueryResult, QueryResultRow } from "pg";
-import { config } from "../config.js";
+import { config } from "../config.ts";
 
 const { Pool } = pg;
 

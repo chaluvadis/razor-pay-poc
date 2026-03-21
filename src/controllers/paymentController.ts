@@ -1,23 +1,23 @@
 import type { Request, Response } from "express";
-import type { OrderRecord } from "../types/order.js";
-import { HttpError } from "../utils/httpError.js";
+import type { OrderRecord } from "../types/order.ts";
+import { HttpError } from "../utils/httpError.ts";
 import {
 	parseAmount,
 	parseCurrency,
 	requireString,
-} from "../utils/validation.js";
+} from "../utils/validation.ts";
 import {
 	createRazorpayOrder,
 	verifyPaymentSignature,
 	verifyWebhookSignature,
-} from "../services/razorpayService.js";
+} from "../services/razorpayService.ts";
 import {
 	getAllOrders,
 	getOrderByRazorpayOrderId,
 	insertOrder,
 	markOrderFailed,
 	markOrderPaid,
-} from "../services/orderService.js";
+} from "../services/orderService.ts";
 
 const buildReceipt = () => `rcpt_${Date.now()}`;
 

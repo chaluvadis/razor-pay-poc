@@ -1,13 +1,11 @@
-import dotenv from "dotenv";
-
-dotenv.config();
+import { env } from "node:process";
 
 const requiredEnvVars = [
 	"RAZORPAY_KEY_ID",
 	"RAZORPAY_KEY_SECRET",
 	"DATABASE_URL",
 ];
-const missingEnvVars = requiredEnvVars.filter((name) => !process.env[name]);
+const missingEnvVars = requiredEnvVars.filter((name) => !env[name]);
 
 if (missingEnvVars.length > 0) {
 	throw new Error(
@@ -27,7 +25,7 @@ interface AppConfig {
 }
 
 const getRequiredEnv = (name: string): string => {
-	const value = process.env[name];
+	const value = env[name];
 	if (!value) {
 		throw new Error(`Missing required environment variable: ${name}`);
 	}
@@ -35,12 +33,12 @@ const getRequiredEnv = (name: string): string => {
 };
 
 export const config: AppConfig = {
-	port: Number(process.env.PORT || 3000),
-	nodeEnv: process.env.NODE_ENV || "development",
+	port: Number(env.PORT || 3000),
+	nodeEnv: env.NODE_ENV || "development",
 	razorpay: {
 		keyId: getRequiredEnv("RAZORPAY_KEY_ID"),
 		keySecret: getRequiredEnv("RAZORPAY_KEY_SECRET"),
-		webhookSecret: process.env.WEBHOOK_SECRET || "",
+		webhookSecret: env.WEBHOOK_SECRET || "",
 	},
 	databaseUrl: getRequiredEnv("DATABASE_URL"),
 };
