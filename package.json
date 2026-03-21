@@ -4,10 +4,6 @@
 	"description": "A proof of concept for Razorpay payment integration with Node.js v24, Express.js, PostgreSQL, Docker, and pgAdmin.",
 	"type": "module",
 	"main": "dist/server.js",
-	"packageManager": "pnpm@10.8.1",
-	"engines": {
-		"node": ">=24.0.0"
-	},
 	"scripts": {
 		"build": "tsc -p tsconfig.json",
 		"start": "node --env-file-if-exists=.env dist/server.js",
